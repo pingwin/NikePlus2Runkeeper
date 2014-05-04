@@ -226,6 +226,10 @@ if __name__ == '__main__':
         config['runkeeper']['email'],
         config['runkeeper']['password']
     )
-    last_import = nike.sync_runkeeper(rk, LAST_DATE)
+    try:
+        last_import = nike.sync_runkeeper(rk, LAST_DATE)
 
-    open(opts['last_import_tracker'],'wb').write(bytes(last_import.isoformat(), 'UTF-8'))
+        open(opts['last_import_tracker'],'wb').write(bytes(last_import.isoformat(), 'UTF-8'))
+    except AssertionError, inst:
+        # these are mostly harmless for this scripts purpose.
+        logging.info("Assertion Error: %s" % inst)
