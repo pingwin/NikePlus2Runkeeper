@@ -94,9 +94,13 @@ class NikePlus(object):
                                lxml.html.fromstring(ret.text).findall('.//script')
                                )
                         ))[0].text
-        js = json.loads( js[ js.find('{') : ].strip()[:-1] )
+        try:
+            js = json.loads( js[ js.find('{') : ].strip()[:-1] )
         
-        return js['activities']
+            return js['activities']
+        except IndexError:
+            logging.warn("no activities found")
+            return []
 
     @_with_auth
     def download_all(self):
