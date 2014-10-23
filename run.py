@@ -88,13 +88,12 @@ class NikePlus(object):
     @_with_auth
     def index_activities(self):
         ret = self._s.get("https://secure-nikeplus.nike.com/plus/activity/running/%(screenName)s/lifetime" % self._profile['entity'])
-        
-        js = list(filter(lambda x: x.text.find('window.np.activity') != -1,
-                        filter(lambda x: x.text is not None,
-                               lxml.html.fromstring(ret.text).findall('.//script')
-                               )
-                        ))[0].text
         try:
+            js = list(filter(lambda x: x.text.find('window.np.activity') != -1,
+                             filter(lambda x: x.text is not None,
+                                    lxml.html.fromstring(ret.text).findall('.//script')
+                                    )
+                             ))[0].text
             js = json.loads( js[ js.find('{') : ].strip()[:-1] )
         
             return js['activities']
