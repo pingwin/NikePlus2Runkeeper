@@ -119,6 +119,9 @@ class NikePlus(object):
             except KeyError:
                 timedelta = 10
 
+            if 'waypoints' not in js['activity']['geo']:
+                return
+
             num_waypoints = len(js['activity']['geo']['waypoints'])
             ts = 0
             with open('%s.csv' % js['activity']['activityId'], 'wb') as out:
@@ -169,23 +172,28 @@ class NikePlus(object):
             except KeyError:
                 timedelta = 10
 
-            num_waypoints = len(js['activity']['geo']['waypoints'])
-            ts = 0
             points = ''
-            for p in js['activity']['geo']['waypoints']:
-                ptype = 'ManualPoint'
-                if p == js['activity']['geo']['waypoints'][0]:
-                    ptype = 'StartPoint'
-                elif p == js['activity']['geo']['waypoints'][num_waypoints-1]:
-                    ptype = 'EndPoint'
-                    
-                points += "%s,%s,%s,%s,0,0,%s;" % (
-                        ptype,
-                        p['lat'],
-                        p['lon'],
-                        timedelta,
-                        ts)
-                ts += timedelta
+            try:
+                num_waypoints = len(js['activity']['geo']['waypoints'])
+                ts = 0
+                
+                for p in js['activity']['geo']['waypoints']:
+                    ptype = 'ManualPoint'
+                    if p == js['activity']['geo']['waypoints'][0]:
+                        ptype = 'StartPoint'
+                    elif p == js['activity']['geo']['waypoints'][num_waypoints-1]:
+                        ptype = 'EndPoint'
+
+                    points += "%s,%s,%s,%s,0,0,%s;" % (
+                            ptype,
+                            p['lat'],
+                            p['lon'],
+                            timedelta,
+                            ts)
+                    ts += timedelta
+            except KeyError:
+                logging.info("No Waypoints found")
+
             rk.upload_nikeplus(js, atime, points)
             del points
         return LAST_IMPORT

@@ -169,12 +169,13 @@ class RunkeeperUploader(object):
         url = "http://runkeeper.com/new/activity"
         formbits = self.grab_bits_from_url(url, 'newactivityform')
         
-        formbits['importFormat'] = 'tcx'
-        formbits['hasMap'] = 'true'
-        formbits['mapEdited'] = 'true'
+        if len(points):
+            formbits['importFormat'] = 'tcx'
+            formbits['hasMap'] = 'true'
+            formbits['mapEdited'] = 'true'
 
-        # transcoding the points from the server into csv for runkeeper
-        formbits['points'] = points
+            # transcoding the points from the server into csv for runkeeper
+            formbits['points'] = points
 
         formbits['startTimeString'] = (activity['activity']['startTimeUtc'][:-6]+'.000').replace('-','/').replace('T', ' ')
         if stime.hour > 12:
