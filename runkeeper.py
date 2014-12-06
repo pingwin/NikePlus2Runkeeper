@@ -176,6 +176,10 @@ class RunkeeperUploader(object):
 
             # transcoding the points from the server into csv for runkeeper
             formbits['points'] = points
+        else:
+            # Nike records distance in KM, RK in miles.
+            formbits['distance'] = activity['activity']['distance'] * 0.621371
+            formbits['gymEquipment'] = 'TREADMILL'
 
         formbits['startTimeString'] = (activity['activity']['startTimeUtc'][:-6]+'.000').replace('-','/').replace('T', ' ')
         if stime.hour > 12:
