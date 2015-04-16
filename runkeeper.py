@@ -46,10 +46,11 @@ class RunkeeperUploader(object):
         form = None
 
         for elm in lxml.html.fromstring(ret).findall('.//form'):
-            if elm.values()[0].lower().find(formname) != -1:
+            if elm.values()[2].lower().find(formname) != -1:
                 form = elm
                 break
 
+        #import pdb; pdb.set_trace()
         assert form is not None
         
         return dict(zip(form.inputs.keys(),
@@ -70,6 +71,7 @@ class RunkeeperUploader(object):
                 formbits['password'] = self._passwd
 
                 ret = self._s.post(url, formbits, allow_redirects=False)
+                #import pdb; pdb.set_trace()
 
                 assert ret.status_code == 302
 
@@ -83,7 +85,7 @@ class RunkeeperUploader(object):
         tree = lxml.html.parse(fd)
         
         url = "http://runkeeper.com/new/activity"
-        formbits = self.grab_bits_from_url(url, 'newactivityform')
+        formbits = self.grab_bits_from_url(url, 'new/activity')
         
         if len(tree.findall('.//trackpoint')):
             # {{{ trackpoint encoding
@@ -167,7 +169,7 @@ class RunkeeperUploader(object):
     @_with_authentication
     def upload_nikeplus(self, activity, stime, points):
         url = "http://runkeeper.com/new/activity"
-        formbits = self.grab_bits_from_url(url, 'newactivityform')
+        formbits = self.grab_bits_from_url(url, 'new/activity')
         
         if len(points):
             formbits['importFormat'] = 'tcx'
