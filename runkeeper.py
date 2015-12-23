@@ -153,7 +153,7 @@ class RunkeeperUploader(object):
         del formbits['hrmFile']
 
         ret = self._s.post(
-            'http://runkeeper.com/new/activity',
+            'https://runkeeper.com/new/activity',
             formbits, # data
             files={'trackFile':('',''), 'hrmFile':('','')},
             allow_redirects=False
@@ -201,7 +201,7 @@ class RunkeeperUploader(object):
         del formbits['hrmFile']
 
         ret = self._s.post(
-            'http://runkeeper.com/new/activity',
+            'https://runkeeper.com/new/activity',
             formbits, # data
             files={'trackFile':('',''), 'hrmFile':('','')},
             allow_redirects=False
